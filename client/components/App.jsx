@@ -11,6 +11,14 @@ const App = () => {
     'https://whatsthatanimal.files.wordpress.com/2014/03/goblin-shark.png',
   ]);
   const [categories, setCategories] = useState([]);
+  useEffect(()=>{
+    fetch('/api/verify')
+  .then(result=>result.json())
+    .then(({verified})=>{
+      if(!verified)window.location.replace('/');
+    });
+  });
+
   useEffect(() => {
     fetch('/api/category')
       .then(response => response.json())
