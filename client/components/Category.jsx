@@ -6,7 +6,7 @@ import Resource from './Resource.jsx';
 //When that button is clicked, it will reveal resources associated with that category
 const Category = props => {
   const [resources, setResources] = useState([]);
-  const [buttonClicked, setButtonClicked] = useState();
+  const [buttonClicked, setButtonClicked] = useState(false);
   const clickHandler = event => {
     event.preventDefault();
     //we use the .setState to update a piece of state
