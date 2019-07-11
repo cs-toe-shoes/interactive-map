@@ -75,7 +75,7 @@ const App = () => {
   return (
     <div>
       <div id="navbar">
-        <img id="logo" src={imageLink} />
+        <img id="logo" src={state.imageLink} />
         <h5>Goblin Sharks!!!</h5>
 
         <a
