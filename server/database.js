@@ -11,10 +11,3 @@ module.exports = () => new Client({
   password: 37740200,
   port: 5432,
 });
-// const pool = new Pool({
-//   user: 'armadillo',
-//   host: 'localhost',
-//   database: 'schema-armadillo',
-//   password: 'pink',
-//   port: 5432,
-// });
