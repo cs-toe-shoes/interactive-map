@@ -15,7 +15,6 @@ const url = oauth2Client.generateAuthUrl({
   access_type: 'online',
   scope: scopes,
 });
-console.log('redirecting to', url);
 
 const googleAuthController = {
   getGooglePicture: (req, res) => {
@@ -31,13 +30,13 @@ const googleAuthController = {
   getGoogleAuthCode: (req, res, next) => {
     const { code } = req.query;
     res.locals.code = code;
-    console.log('googleAuthController => getAuthCode', code);
+    // console.log('googleAuthController => getAuthCode', code);
     return next();
   },
   getGoogleToken: async (req, res, next) => {
     const { code } = res.locals;
     const { tokens } = await oauth2Client.getToken(code);
-    console.log('googleAuthController => getGoogleToken => tokens', tokens);
+    // console.log('googleAuthController => getGoogleToken => tokens', tokens);
     oauth2Client.setCredentials(tokens);
     res.locals.tokens = tokens;
     return next();
@@ -50,12 +49,8 @@ const googleAuthController = {
     oauth2.userinfo.get((err, result) => {
       if (err) return console.log(err);
       const { data } = result;
-      // console.log(data);
-      console.log(res.locals);
 
       res.locals = { email: data.email, name: data.name, picture: data.picture };
-      console.log(res.locals);
-      console.log(res.locals.picture);
       return next();
     });
   },

@@ -24,10 +24,13 @@ const apiGetController = {
     client.connect((err) => {
       // if(err) res.status(504).send('Internal error');
       client.query(queryString, (err, result) => {
-        // if (err) return res.send(err);
+        if (err) {
+          console.log('getController => getData => client.query', err);
+          return res.status(504).send(err);
+        }
         // console.log(result.rows);
         const results = result.rows;
-        console.log('getController => getData => client.query', results);
+        // console.log('getController => getData => client.query', results);
         client.end();
         return res.status(200).send(results);
       });
@@ -37,7 +40,10 @@ const apiGetController = {
     const queryIdString = 'SELECT * FROM categories';
     const client = clientMaker();
     client.connect((err) => {
-      if (err) return res.status(504).send(err);
+      if (err) {
+        console.log('getController => getCategory => client.query', err);
+        return res.status(504).send(err);
+      }
       client.query(queryIdString, (err, result) => {
         if (err) return res.status(504).send(err);
         const results = result.rows;

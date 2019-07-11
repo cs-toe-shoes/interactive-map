@@ -26,13 +26,6 @@ class MainContainer extends Component {
         <a
           className="login"
           href="https://accounts.google.com/o/oauth2/v2/auth?access_type=online&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&response_type=code&client_id=628831693771-dk92gnuo75s6o381ad3bl84m6ll357lb.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2FgoogleAuth"
-          // onClick={() => {
-          //   fetch('/api/googleRedirect', {
-          //     mode: 'no-cors', // no-cors, cors, *same-origin
-          //     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          //     // credentials: 'same-origin', // include, *same-origin, omit
-          //   });
-          // }}
         >
           <i className="fa fa-google fa-3x" />
         </a>
