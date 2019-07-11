@@ -17,31 +17,23 @@ const apiGetController = {
         ORDER BY score DESC;`;
 
     const client = clientMaker();
-    client.connect((err) => {
-      // if(err) res.status(504).send('Internal error');
-      client.query(queryString, (err, result) => {
-        // if (err) return res.send(err);
-        // console.log(result.rows);
-        const results = result.rows;
-        console.log('getController => getData => client.query', results);
-        client.end();
-        return res.status(200).send(results);
-      });
-    });
+    client.connect()
+      .then(() => client.query(queryString)
+        .then((result) => {
+          client.end();
+          return res.status(200).send(result.rows);
+        })
+        .catch(err => res.status(504).send(`Internal error: ${err}`)))
+      .catch(err => res.status(504).send(`Internal error: ${err}`));
   },
   getCategory: (req, res) => {
     const queryIdString = 'SELECT * FROM categories';
     const client = clientMaker();
-    client.connect((err) => {
-      if (err) return res.status(504).send(err);
-      client.query(queryIdString, (err, result) => {
-        if (err) return res.status(504).send(err);
-        const results = result.rows;
-        client.end();
-        return res.status(200).send(results);
-      });
-    });
+    client.connect()
+      .then(() => client.query(queryIdString)
+        .then(results => res.status(200).send(results.rows))
+        .catch(err => res.status(504).send(`Internal Error: ${err}`)))
+      .catch(err => res.status(504).send(`Internal Error: ${err}`));
   },
 };
-
 module.exports = apiGetController;
