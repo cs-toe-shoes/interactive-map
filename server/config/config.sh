@@ -7,9 +7,9 @@ export PGPASSWORD='node_password'
 #
 # Should grab your username
 #
-dropdb -U joshuakim goblin-shark
-createdb -U joshuakim goblin-shark;
-psql -U joshuakim goblin-shark < ./server/config/db_setup.sql
+dropdb -U Fredo goblin-shark
+createdb -U Fredo goblin-shark;
+psql -U Fredo goblin-shark < ./server/config/db_setup.sql
 
 echo "Goblin_shark was configered";
 
