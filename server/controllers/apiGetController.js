@@ -8,7 +8,11 @@ const apiGetController = {
               a.resourceid,
               SUM(case when b.upvote = TRUE then 1 else 0 end) sumUpvote,
               SUM(case when b.upvote = FALSE then 1 else 0 end) sumDownvote,
-              SUM(case when b.upvote = TRUE then 1 else -0.5 end) score
+              SUM(case
+                WHEN b.upvote IS TRUE then 1
+                WHEN b.upvote IS FALSE then -0.5
+                WHEN b.upvote IS NULL then 0
+                end) score
       FROM    resources a
               FULL JOIN votes b
                   ON a.resourceid = b.resourceid
