@@ -7,6 +7,7 @@ const {
   getAccessToken,
   getAPI,
   jwtCookie,
+  setVerifiedEmail,
 } = require('../controllers/oAuthController.js');
 const { cookieSecret } = require('../server_settings/oAuthSettings.js');
 const {
@@ -18,9 +19,6 @@ const {
 
 const apiRouter = express.Router();
 
-apiRouter.get('/test', (req, res, next) => {
-  res.send({ message: 'test working' });
-});
 apiRouter.get('/category', getCategory);
 apiRouter.get('/resources/:id', getData);
 
@@ -29,21 +27,13 @@ apiRouter.get('/resources/:id', getData);
 apiRouter.get('/login', getoAuthCode, getAccessToken, getAPI, jwtCookie);
 apiRouter.get('/googleAuth', getGoogleAuthCode, getGoogleToken, getGoogleEmail, jwtCookie);
 apiRouter.get('/googlePicture', getGooglePicture);
+apiRouter.get('/verify', setVerifiedEmail, (req, res) => {
+  if (res.locals.verifiedEmail) return res.send({ verified: true });
+  return res.send({ verified: false });
+});
 // apiRouter.get('/fakeData', getFakeData);
 
-apiRouter.post(
-  '/vote/',
-  (req, res, next) => {
-    const { jwtToken } = req.cookies;
-    jwt.verify(jwtToken, cookieSecret, (err, result) => {
-      if (err) throw err;
-      else res.locals.verifiedEmail = result.email;
-    });
-    next();
-  },
-  postVote,
-);
-
+apiRouter.post('/vote/', setVerifiedEmail, postVote);
 apiRouter.post('/resource/', postResource);
 
 module.exports = apiRouter;

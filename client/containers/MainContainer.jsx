@@ -12,6 +12,14 @@ class MainContainer extends Component {
     clearTimeout(this.timeoutHandle);
   }
 
+  componentDidMount(){
+    fetch('/api/verify')
+          .then(result=>result.json())
+            .then(({verified})=>{
+              if(verified)this.props.history.push('/main');
+                else alert('you are not verified')
+            });
+  }
   render() {
     return (
       <div>
