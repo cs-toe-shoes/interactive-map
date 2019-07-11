@@ -7,6 +7,7 @@ import Resource from './Resource.jsx';
 const Category = props => {
   const [resources, setResources] = useState(['www.youtube.com']);
   const [buttonClicked, setButtonClicked] = useState(false);
+
   const clickHandler = event => {
     event.preventDefault();
     //we use the .setState to update a piece of state
@@ -19,6 +20,8 @@ const Category = props => {
       //we will update our resources value stored in this.state
       .then(data => setResources(data))
       .catch(err => console.log(err));
+
+    ;
   };
 
   const updatedResources = resources.map(resource => {
@@ -30,6 +33,7 @@ const Category = props => {
         sumdownvote={resource.sumdownvote}
         sumupvote={resource.sumupvote}
         score={resource.score}
+        hasVoted={resource.hasvoted}
       />
 
     );

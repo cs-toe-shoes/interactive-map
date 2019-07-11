@@ -9,7 +9,6 @@ const {
   jwtCookie,
   setVerifiedEmail,
 } = require('../controllers/oAuthController.js');
-const { cookieSecret } = require('../server_settings/oAuthSettings.js');
 const {
   getGoogleAuthCode,
   getGoogleToken,
@@ -20,7 +19,8 @@ const {
 const apiRouter = express.Router();
 
 apiRouter.get('/category', getCategory);
-apiRouter.get('/resources/:id', getData);
+apiRouter.get('/resources/:id', setVerifiedEmail, getData);
+// apiRouter.get('/upvoted/:id', getUpvotedResources);
 
 // create a route for the callbackURL
 // this is the response from the GitHub OAuth server after client requests to use GitHub for Oauth
