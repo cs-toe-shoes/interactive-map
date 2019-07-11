@@ -15,7 +15,6 @@ const url = oauth2Client.generateAuthUrl({
   access_type: 'online',
   scope: scopes,
 });
-console.log('redirecting to', url);
 
 const googleAuthController = {
   getGooglePicture: (req, res) => {

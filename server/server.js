@@ -1,12 +1,24 @@
 const express = require('express');
+
+const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 const apiRouter = require('./routers/apiRouter.js');
 
-const app = express();
 const port = 3000;
+server.listen(80);
+
+io.on('connection', (socket) => {
+  console.log('websocket connected');
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', (data) => {
+    console.log(data);
+  });
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
