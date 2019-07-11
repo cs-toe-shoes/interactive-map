@@ -15,7 +15,12 @@ const Resource = props => {
     fetch('/api/vote', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ resourceid: props.id, useremail: lameEmail, upvote: voteCopy }),
+      body: JSON.stringify({
+        resourceid: props.id,
+        resource: props.link,
+        useremail: lameEmail,
+        upvote: voteCopy,
+      }),
     })
       .then(response => response.json())
       .then(data => {
@@ -33,7 +38,12 @@ const Resource = props => {
     fetch('/api/vote', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ resourceid: props.id, useremail: lameEmail, upvote: voteCopy }),
+      body: JSON.stringify({
+        resourceid: props.id,
+        resource: props.link,
+        useremail: lameEmail,
+        upvote: voteCopy,
+      }),
     })
       .then(response => response.json())
       .then(data => {

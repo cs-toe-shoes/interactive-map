@@ -1,37 +1,42 @@
 import React, { Component, useState, useEffect } from 'react';
 import '../styles.css';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Category from './Category';
 import AddResource from './AddResource';
+import io from 'socket.io-client';
 
 // toast.configure({ autoClose: 2000, draggable: true });
 
 const App = () => {
-  const [imageLink, setImageLink] = useState([
-    'https://whatsthatanimal.files.wordpress.com/2014/03/goblin-shark.png',
-  ]);
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
+  // const [imageLink, setImageLink] = useState([
+  //   'https://whatsthatanimal.files.wordpress.com/2014/03/goblin-shark.png',
+  // ]);
+  const [state, setState] = useState({
+    categories: [],
+    imageLink: 'https://whatsthatanimal.files.wordpress.com/2014/03/goblin-shark.png',
+  });
   useEffect(() => {
     fetch('/api/category')
       .then(response => response.json())
-      .then(data => setCategories(data))
+      .then(data => setState({ categories: data }))
       .catch(err => console.log(err));
   }, []);
 
-  useEffect(() => {
-    fetch('/api/GooglePicture')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        if (data.picture.length > 0) {
-          setImageLink(data.picture);
-        }
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch('/api/GooglePicture')
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       console.log(data);
+  //       if (data.picture.length > 0) {
+  //         setImageLink(data.picture);
+  //       }
+  //     });
+  // }, []);
   //we will map over the categories array in the state object
   //we will create a react component for each element in the categories array
 
-  const categoryComponents = categories.map(category => {
+  const categoryComponents = state.categories.map(category => {
     return (
       <Category
         key={`catid_${category.categoryid}`}
@@ -41,11 +46,24 @@ const App = () => {
     );
   });
 
+  // open socket connection
+  const socket = io('http://localhost:3000');
+  socket.on('vote', data => {
+    console.log('message from voted middleware', data);
+    notifyA(data);
+  });
+
+  const notifyA = data => {
+    const vote = data.vote ? 'upvoted' : 'downvoted';
+    toast(`${data.votedBy} ${vote} ${data.resource}`, { containerId: 'A' });
+  };
+
   return (
     <div>
       <div id="navbar">
         <img id="logo" src={imageLink} />
         <h5>Goblin Sharks!!!</h5>
+
         <a
           className="login"
           href="https://github.com/login/oauth/authorize?client_id=13defefbd00cf6ce9fbf&scope=user:email"
@@ -55,6 +73,14 @@ const App = () => {
         <a className="login">
           <i className="fa fa-google fa-3x" />
         </a>
+      </div>
+      <div className="notification-center">
+        Notification Center
+        <ToastContainer
+          enableMultiContainer
+          containerId={'A'}
+          position={toast.POSITION.TOP_RIGHT}
+        />
       </div>
       <div className="categoryParent">{categoryComponents}</div>
       <div id="addResource">

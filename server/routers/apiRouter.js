@@ -15,6 +15,7 @@ const {
   getGoogleEmail,
   getGooglePicture,
 } = require('../controllers/googleAuthController');
+const socketController = require('../controllers/socketController');
 
 const apiRouter = express.Router();
 
@@ -39,8 +40,9 @@ apiRouter.post(
       if (err) throw err;
       else res.locals.verifiedEmail = result.email;
     });
-    next();
+    return next();
   },
+  socketController.emitVote,
   postVote,
 );
 

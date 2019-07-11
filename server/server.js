@@ -1,23 +1,31 @@
 const express = require('express');
-
-const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+
+// localhost port
+const app = express();
+const port = 3000;
+
+// create a socket with the server instance
+const server = app.listen(port, () => console.log(`listening on port ${port}!`));
+const io = require('socket.io').listen(server);
 const apiRouter = require('./routers/apiRouter.js');
 
-const port = 3000;
-server.listen(80);
-
+const socketIO = {};
 io.on('connection', (socket) => {
   console.log('websocket connected');
-  socket.emit('news', { hello: 'world' });
+  socketIO.socket = socket;
   socket.on('my other event', (data) => {
     console.log(data);
   });
+});
+
+app.use((req, res, next) => {
+  req.io = io;
+  req.socket = socketIO.socket;
+  next();
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,4 +51,4 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../index.html'));
 });
 
-app.listen(port, () => console.log(`listening on port ${port}!`));
+// app.listen(port, () => console.log(`listening on port ${port}!`));
