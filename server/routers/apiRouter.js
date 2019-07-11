@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const { getData, getCategory } = require('../controllers/apiGetController.js');
-const { postVote, postResource } = require('../controllers/apiPostController.js');
+const { postVote, postResource, postCategory } = require('../controllers/apiPostController.js');
 const {
   getoAuthCode,
   getAccessToken,
@@ -35,5 +35,6 @@ apiRouter.get('/verify', setVerifiedEmail, (req, res) => {
 
 apiRouter.post('/vote/', setVerifiedEmail, postVote);
 apiRouter.post('/resource/', postResource);
+apiRouter.post('/category/', postCategory);
 
 module.exports = apiRouter;

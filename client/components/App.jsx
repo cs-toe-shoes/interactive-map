@@ -3,6 +3,7 @@ import '../styles.css';
 import { toast } from 'react-toastify';
 import Category from './Category';
 import AddResource from './AddResource';
+import AddCategory from './AddCategory';
 
 // toast.configure({ autoClose: 2000, draggable: true });
 
@@ -49,6 +50,22 @@ const App = () => {
     );
   });
 
+  const clickHandler = (e) => {
+    e.preventDefault()
+    console.log(categoryName)
+
+
+    fetch('/api/resource', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category: categoryName }),
+    }).then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => error);
+
+
+  }
+
   return (
     <div>
       <div id="navbar">
@@ -64,6 +81,13 @@ const App = () => {
           <i className="fa fa-google fa-3x" />
         </a>
       </div>
+
+      <div id="addCategory">
+        <h2>Submit Categories Here</h2>
+        <AddCategory categories={categories} />
+      </div>
+    
+      
       <div className="categoryParent">{categoryComponents}</div>
       <div id="addResource">
         <h2>Submit Resources Here</h2>

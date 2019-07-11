@@ -5,8 +5,8 @@ import Resource from './Resource.jsx';
 //A component that has a button element
 //When that button is clicked, it will reveal resources associated with that category
 const Category = props => {
-  const [resources, setResources] = useState(['www.youtube.com']);
-  const [buttonClicked, setButtonClicked] = useState(false);
+  const [resources, setResources] = useState([]);
+  const [buttonClicked, setButtonClicked] = useState();
   const clickHandler = event => {
     event.preventDefault();
     //we use the .setState to update a piece of state
@@ -21,26 +21,32 @@ const Category = props => {
       .catch(err => console.log(err));
   };
 
+  
   const updatedResources = resources.map(resource => {
     return (
       <Resource
-        id={resource.resourceid}
-        link={resource.link}
-        key={`${resource.resourceid}${props.id}`}
-        sumdownvote={resource.sumdownvote}
-        sumupvote={resource.sumupvote}
-        score={resource.score}
+      id={resource.resourceid}
+      link={resource.link}
+      key={`${resource.resourceid}${props.id}`}
+      sumdownvote={resource.sumdownvote}
+      sumupvote={resource.sumupvote}
+      score={resource.score}
       />
+      
+      );
+      
+    });
 
-    );
-  });
-  return (
+    let render = 'Sorry, no resources';
+      if (updatedResources.length > 0) render = updatedResources;
+
+    return (
     <div className="categoryDiv">
-      <div className={`cat${props.id}`} onClick={clickHandler}>
+      <div className={`cat${props.id} categoryBtn`} onClick={clickHandler}>
         {props.categoryName}
       </div>
       <div className="resourcesList">
-        {buttonClicked ? updatedResources : ''}
+        {buttonClicked ? render : ''}
       </div>
     </div>
   );

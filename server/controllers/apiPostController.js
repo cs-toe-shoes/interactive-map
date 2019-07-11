@@ -38,6 +38,21 @@ const apiPostController = {
       });
     });
   },
+
+  postCategory: (req, res) => {
+    const { category } = req.body;
+    console.log(req.body);
+    const queryString = 'INSERT INTO categories (category) VALUES ($1) RETURNING *';
+    const values = [category];
+    const client = clientMaker();
+    client.connect((err) => {
+      client.query(queryString, values, (error, result) => {
+        if (err) console.log('Error', error);
+        client.end();
+        return res.status(200).send(result.rows);
+      });
+    });
+  },
 };
 
 module.exports = apiPostController;
