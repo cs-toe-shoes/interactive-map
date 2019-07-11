@@ -13,10 +13,8 @@ const apiPostController = {
       }
       client.query(text, values, (err, result) => {
         if (err) {
-          console.log('postController => postVote => client.query', err);
           return res.send(err);
         }
-        console.log('postController => postVote => client.query', result.rows);
         client.end();
         return res.send(result.rows);
       });
