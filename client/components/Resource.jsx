@@ -3,39 +3,48 @@ import React, { Component, useState } from 'react';
 //TODO Hook refactor
 
 const Resource = props => {
-  const [upvoted, setUpvoted] = useState(false);
-  const [downvoted, setDownvoted] = useState(false);
+  const [vote, setVote] = useState(null);
   const [lameEmail, setLameEmail] = useState('lameEmail@gmail.com');
-  console.log(`UPVOTED: ${upvoted} \n DOWNVOTED: ${downvoted}`);
+  // console.log(`UPVOTED: ${upvoted} \n DOWNVOTED: ${downvoted}`);
   const handleUpVote = event => {
-    setUpvoted(!upvoted);
-    setDownvoted(false);
-    const tempVal = !upvoted;
-    let bool = tempVal ? tempVal : null;
+    let voteCopy;
+    if (vote === null) voteCopy = true;
+    else if (vote === true) voteCopy = null;
+    else if (vote === false) voteCopy = null;
+
     fetch('/api/vote', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ resourceid: props.id, useremail: lameEmail, upvote: bool }),
+      body: JSON.stringify({ resourceid: props.id, useremail: lameEmail, upvote: voteCopy }),
     })
       .then(response => response.json())
-      .then(data => console.log(data))
+      .then(data => {
+        console.log('Resource.js => handleUpVote => data', voteCopy, data);
+        setVote(voteCopy);
+      })
       .catch(error => error);
   };
 
   const handleDownVote = event => {
-    setDownvoted(!downvoted);
-    setUpvoted(false);
-    const tempVal = !downvoted;
-    let bool = tempVal ? tempVal : null;
+    let voteCopy;
+    if (vote === null) voteCopy = false;
+    else if (vote === true) voteCopy = null;
+    else if (vote === false) voteCopy = null;
     fetch('/api/vote', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ resourceid: props.id, useremail: lameEmail, upvote: bool }),
+      body: JSON.stringify({ resourceid: props.id, useremail: lameEmail, upvote: voteCopy }),
     })
       .then(response => response.json())
-      .then(data => console.log(data))
+      .then(data => {
+        console.log('Resource.js => handleDownVote => data', voteCopy, data);
+        setVote(voteCopy);
+      })
       .catch(error => error);
   };
+
+  const upVote = vote === true ? 1 : 0;
+  const downVote = vote === false ? 1 : 0;
 
   return (
     <div className="resourceDiv">
@@ -45,13 +54,13 @@ const Resource = props => {
           <a className="things" href="#" onClick={handleUpVote}>
             upvote
           </a>
-          {Number(props.sumupvote) + Number(upvoted)}
+          {Number(props.sumupvote) + upVote}
         </div>
         <div className="subtracting">
           <a className="things" href="#" onClick={handleDownVote}>
             downvote
           </a>
-          {Number(props.sumdownvote) + Number(downvoted)}
+          {Number(props.sumdownvote) + downVote}
         </div>
       </div>
     </div>

@@ -8,9 +8,14 @@ const apiPostController = {
     const values = [resourceid, useremail, upvote];
     const client = clientMaker();
     client.connect((err) => {
-      // if(err) res.status(504).send('Internal error');
+      if (err) {
+        return res.status(504).send('Internal error');
+      }
       client.query(text, values, (err, result) => {
-        if (err) return res.send(err);
+        if (err) {
+          console.log('postController => postVote => client.query', err);
+          return res.send(err);
+        }
         console.log('postController => postVote => client.query', result.rows);
         client.end();
         return res.send(result.rows);
@@ -20,7 +25,7 @@ const apiPostController = {
 
   postResource: (req, res) => {
     const { categoryid, link, author } = req.body;
-    console.log(categoryid, link, author);
+    // console.log(categoryid, link, author);
     const text = 'INSERT INTO resources (categoryid, link, author, iscommunity) VALUES ($1, $2, $3, $4) RETURNING *';
     const values = [categoryid, link, author, true];
     const client = clientMaker();
