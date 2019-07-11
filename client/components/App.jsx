@@ -4,6 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import Category from './Category';
 import AddResource from './AddResource';
 import io from 'socket.io-client';
+import AddCategory from './AddCategory';
 
 // toast.configure({ autoClose: 2000, draggable: true });
 
@@ -16,6 +17,19 @@ const App = () => {
     categories: [],
     imageLink: 'https://whatsthatanimal.files.wordpress.com/2014/03/goblin-shark.png',
   });
+  // const [imageLink, setImageLink] = useState([
+  //   'https://whatsthatanimal.files.wordpress.com/2014/03/goblin-shark.png',
+  // ]);
+  // const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/verify')
+      .then(result => result.json())
+      .then(({ verified }) => {
+        if (!verified) window.location.replace('/');
+      });
+  });
+
   useEffect(() => {
     fetch('/api/category')
       .then(response => response.json())
@@ -82,10 +96,16 @@ const App = () => {
           position={toast.POSITION.TOP_RIGHT}
         />
       </div>
+
+      <div id="addCategory">
+        <h2>Submit Categories Here</h2>
+        <AddCategory categories={state.categories} />
+      </div>
+
       <div className="categoryParent">{categoryComponents}</div>
       <div id="addResource">
         <h2>Submit Resources Here</h2>
-        <AddResource categories={categories} />
+        <AddResource categories={state.categories} />
       </div>
     </div>
   );

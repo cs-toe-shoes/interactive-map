@@ -5,6 +5,13 @@ const jwt = require('jsonwebtoken');
 const { clientID, clientSecret, cookieSecret } = require('../server_settings/oAuthSettings');
 
 const oAuthController = {
+  setVerifiedEmail: (req, res, next) => {
+    const { jwtToken } = req.cookies;
+    jwt.verify(jwtToken, cookieSecret, (err, result) => {     
+      if (result) res.locals.verifiedEmail = result.email;
+    });
+    next();
+  },
   // method for getting authorization code from GitHub oAuth server
   getoAuthCode: (req, res, next) => {
     const { code } = req.query;

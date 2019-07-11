@@ -1,4 +1,6 @@
+const jwt = require('jsonwebtoken');
 const clientMaker = require('../database.js');
+const { cookieSecret } = require('../server_settings/oAuthSettings');
 
 const apiGetController = {
   getData: (req, res) => {
@@ -12,7 +14,12 @@ const apiGetController = {
                 WHEN b.upvote IS TRUE then 1
                 WHEN b.upvote IS FALSE then -0.5
                 WHEN b.upvote IS NULL then 0
-                end) score
+                end) score,
+              SUM(case 
+                when b.useremail='${res.locals.verifiedEmail}' AND b.upvote IS TRUE then 1
+                when b.useremail='${res.locals.verifiedEmail}' AND b.upvote IS FALSE then -1
+                when b.useremail='${res.locals.verifiedEmail}' AND b.upvote IS NULL then 0
+                end) hasVoted
       FROM    resources a
               FULL JOIN votes b
                   ON a.resourceid = b.resourceid

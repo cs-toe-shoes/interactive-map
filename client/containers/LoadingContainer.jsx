@@ -15,7 +15,7 @@ export default class LoadingContainer extends Component {
     this.timeoutHandle = setTimeout(() => {
       // Add your logic for the transition
       this.setState({ component: <App /> });
-    }, 100);
+    }, 3000);
   }
 
   componentWillUnmount() {
