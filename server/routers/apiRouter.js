@@ -1,5 +1,4 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const { getData, getCategory } = require('../controllers/apiGetController.js');
 const { postVote, postResource, postCategory } = require('../controllers/apiPostController.js');
 const {
@@ -15,6 +14,7 @@ const {
   getGoogleEmail,
   getGooglePicture,
 } = require('../controllers/googleAuthController');
+const socketController = require('../controllers/socketController');
 
 const apiRouter = express.Router();
 
@@ -33,7 +33,7 @@ apiRouter.get('/verify', setVerifiedEmail, (req, res) => {
 });
 // apiRouter.get('/fakeData', getFakeData);
 
-apiRouter.post('/vote/', setVerifiedEmail, postVote);
+apiRouter.post('/vote/', setVerifiedEmail, socketController.emitVote, postVote);
 apiRouter.post('/resource/', postResource);
 apiRouter.post('/category/', postCategory);
 

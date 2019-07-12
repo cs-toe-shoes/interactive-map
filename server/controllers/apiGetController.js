@@ -52,6 +52,7 @@ const apiGetController = {
         return res.status(504).send(err);
       }
       client.query(queryIdString, (err, result) => {
+        // console.log(result);
         if (err) return res.status(504).send(err);
         const results = result.rows;
         client.end();

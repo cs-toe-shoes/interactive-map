@@ -32,6 +32,7 @@ module.exports = env => ({
     historyApiFallback: true,
     publicPath: path.resolve(__dirname, '/dist/'),
     compress: true,
+    hot: false,
     port: 8080,
     proxy: {
       '/api': {
@@ -40,5 +41,4 @@ module.exports = env => ({
       },
     },
   },
-
 });
