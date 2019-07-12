@@ -17,6 +17,7 @@ const App = () => {
   const [state, setState] = useState({
     categories: [],
     imageLink: 'https://whatsthatanimal.files.wordpress.com/2014/03/goblin-shark.png',
+    loaded: false,
   });
   // const [imageLink, setImageLink] = useState([
   //   'https://whatsthatanimal.files.wordpress.com/2014/03/goblin-shark.png',
@@ -54,7 +55,7 @@ const App = () => {
     });
     Promise.all([fetchCategory, fetchImage]).then(values => {
       console.log(values);
-      setState({ categories: values[0], imageLink: values[1] });
+      setState({ categories: values[0], imageLink: values[1], loaded: true });
     });
   }, []);
 
@@ -82,11 +83,22 @@ const App = () => {
   });
 
   // open socket connection
-  const socket = io('http://localhost:3000');
-  socket.on('vote', data => {
-    console.log('message from voted middleware', data);
-    notifyA(data);
-  });
+  if (state.loaded === false) {
+    const socket = io(
+      'http://localhost:3000',
+      // {
+      //   transports: ['websocket'],
+      //   upgrade: false,
+      // }
+    );
+    socket.on('vote', data => {
+      console.log('message from voted middleware', data);
+      notifyA(data);
+    });
+    socket.on('disconnect', () => {
+      socket.removeAllListeners();
+    });
+  }
 
   const notifyA = data => {
     const vote = data.vote ? 'upvoted' : 'downvoted';
