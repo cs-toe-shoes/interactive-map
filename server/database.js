@@ -5,7 +5,7 @@ const user = require('os').userInfo().username;
 // module.exports = () => new Client(conString);
 
 module.exports = () => new Client({
-  user,
+  username: 'joshuakim',
   host: 'localhost',
   database: 'goblin-shark',
   password: 37740200,

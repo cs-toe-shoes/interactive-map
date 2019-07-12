@@ -1,10 +1,11 @@
 import React, { Component, useState, useEffect } from 'react';
 import '../styles.css';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer, cssTransition } from 'react-toastify';
 import Category from './Category';
 import AddResource from './AddResource';
 import io from 'socket.io-client';
 import AddCategory from './AddCategory';
+import { resolveObject } from 'url';
 
 // toast.configure({ autoClose: 2000, draggable: true });
 
@@ -31,21 +32,41 @@ const App = () => {
   });
 
   useEffect(() => {
-    fetch('/api/category')
-      .then(response => response.json())
-      .then(data => setState({ categories: data }))
-      .catch(err => console.log(err));
+    const fetchCategory = new Promise(resolve => {
+      fetch('/api/category')
+        .then(response => response.json())
+        .then(data => {
+          // setState({ categories: data });
+          console.log('useeffect', data);
+          resolve(data);
+        })
+        .catch(err => console.log(err));
+    });
+    const fetchImage = new Promise(resolve => {
+      fetch('/api/GooglePicture')
+        .then(response => response.json())
+        .then(data => {
+          if (data.picture.length > 0) {
+            return resolve(data.picture);
+          }
+          resolve('https://whatsthatanimal.files.wordpress.com/2014/03/goblin-shark.png');
+        });
+    });
+    Promise.all([fetchCategory, fetchImage]).then(values => {
+      console.log(values);
+      setState({ categories: values[0], imageLink: values[1] });
+    });
   }, []);
 
   // useEffect(() => {
-  //   fetch('/api/GooglePicture')
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       console.log(data);
-  //       if (data.picture.length > 0) {
-  //         setImageLink(data.picture);
-  //       }
-  //     });
+  // fetch('/api/GooglePicture')
+  //   .then(response => response.json())
+  //   .then(data => {
+  //     console.log(data);
+  //     if (data.picture.length > 0) {
+  //       setImageLink(data.picture);
+  //     }
+  //   });
   // }, []);
   //we will map over the categories array in the state object
   //we will create a react component for each element in the categories array
@@ -69,7 +90,9 @@ const App = () => {
 
   const notifyA = data => {
     const vote = data.vote ? 'upvoted' : 'downvoted';
-    toast(`${data.votedBy} ${vote} ${data.resource}`, { containerId: 'A' });
+    toast.success(`${data.votedBy} ${vote} ${data.resource}`, {
+      containerId: 'A',
+    });
   };
 
   return (
@@ -88,20 +111,17 @@ const App = () => {
           <i className="fa fa-google fa-3x" />
         </a>
       </div>
-      <div className="notification-center">
-        Notification Center
-        <ToastContainer
-          enableMultiContainer
-          containerId={'A'}
-          position={toast.POSITION.TOP_RIGHT}
-        />
-      </div>
-
+      Notification Center
+      <ToastContainer
+        enableMultiContainer
+        className="notification-center"
+        containerId={'A'}
+        position={toast.POSITION.TOP_RIGHT}
+      />
       <div id="addCategory">
         <h2>Submit Categories Here</h2>
         <AddCategory categories={state.categories} />
       </div>
-
       <div className="categoryParent">{categoryComponents}</div>
       <div id="addResource">
         <h2>Submit Resources Here</h2>
